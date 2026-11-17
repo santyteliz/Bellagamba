@@ -1,0 +1,397 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   BELLAGAMBA — Sistema de diseño "Naranja con aire"
+   ========================================================================== */
+
+/*
+  GELLIX (tipografía de marca, licenciada).
+  Cuando el cliente pase los archivos, copiarlos a /public/fonts/gellix/ y
+  descomentar este bloque. El stack de --font-sans ya la prioriza sobre Manrope.
+
+@font-face { font-family: "Gellix"; src: url("/fonts/gellix/Gellix-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Gellix"; src: url("/fonts/gellix/Gellix-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Gellix"; src: url("/fonts/gellix/Gellix-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Gellix"; src: url("/fonts/gellix/Gellix-SemiBold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+*/
+
+@theme {
+  /* Marca */
+  --color-naranja: #ef7208; /* fondos, CTAs, acentos sobre oscuro */
+  --color-naranja-deep: #e86a00; /* bloque pleno con texto blanco grande (AA large) */
+  --color-naranja-ink: #e06a00; /* palabras clave en titulares grandes sobre claro */
+  --color-naranja-text: #b85000; /* texto chico naranja sobre claro (AA 4.5:1) */
+  --color-naranja-50: #fff4ea;
+  --color-naranja-100: #fde3cc;
+  --color-verde: #67ab37; /* micro acento: dot del logo, "Disponible" */
+
+  --color-ink: #141414;
+  --color-carbon: #1f1f1f;
+  --color-crema: #f5f3ef;
+  --color-arena: #ebe7e0;
+  --color-gris: #969696;
+  --color-gris-text: #6b6b6b; /* gris accesible sobre claro */
+  --color-linea: #e3dfd8;
+
+  /* Tipografía */
+  --font-sans: "Gellix", var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --text-display: clamp(2.75rem, 1.6rem + 5.2vw, 7rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.035em;
+  --text-h1: clamp(2.25rem, 1.5rem + 3.4vw, 4.75rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.03em;
+  --text-h2: clamp(1.875rem, 1.35rem + 2.2vw, 3.5rem);
+  --text-h2--line-height: 1.06;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h3: clamp(1.375rem, 1.15rem + 0.9vw, 2rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.015em;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --radius-card: 1.25rem;
+
+  --breakpoint-xs: 26rem;
+  --breakpoint-3xl: 112rem;
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    background: var(--color-crema);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--color-naranja);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-naranja);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .on-dark :focus-visible,
+  .bg-ink :focus-visible {
+    outline-color: #fff;
+  }
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  img {
+    user-select: none;
+  }
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
+/* ---------- Utilidades de marca ---------- */
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: 96rem;
+  @variant sm {
+    padding-inline: 1.5rem;
+  }
+  @variant lg {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@utility tracking-shulbius {
+  letter-spacing: 0.42em;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Reveal de líneas (máscara) */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.line-mask > span {
+  display: block;
+  will-change: transform;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+/* Ken Burns */
+@keyframes kenburns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.14) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-arena);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+/* Range slider (precio) */
+.range-thumb {
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+.range-thumb::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--color-naranja);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.15);
+  cursor: grab;
+}
+.range-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--color-naranja);
+  cursor: grab;
+}
+
+/* MapLibre */
+.maplibregl-ctrl-attrib {
+  font-size: 10px !important;
+}
+.price-marker {
+  font-family: var(--font-sans);
+  transition: transform 0.25s var(--ease-expo), background 0.2s, color 0.2s;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Impresión (ficha PDF) */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-break {
+    break-before: page;
+  }
+  .avoid-break {
+    break-inside: avoid;
+  }
+}
+
+/* ---------- Reveal on scroll (activado por <Reveal/>; sin JS el contenido queda visible) ---------- */
+.js [data-reveal]:not([data-in]) .rl > span {
+  transform: translate3d(0, 108%, 0);
+}
+.rl {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+.rl > span {
+  display: block;
+  transition: transform 1.1s var(--ease-expo);
+  transition-delay: calc(var(--i, 0) * 90ms + var(--d, 0ms));
+}
+.js [data-reveal="fade"]:not([data-in]) {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+[data-reveal="fade"] {
+  transition: opacity 1s var(--ease-expo), transform 1.1s var(--ease-expo);
+  transition-delay: var(--d, 0ms);
+}
+.js [data-reveal="clip"]:not([data-in]) {
+  clip-path: inset(12% 6% 12% 6% round 1.25rem);
+}
+.js [data-reveal="clip"]:not([data-in]) img {
+  transform: scale(1.18);
+}
+[data-reveal="clip"] {
+  clip-path: inset(0 0 0 0 round 0);
+  transition: clip-path 1.4s var(--ease-expo);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal="clip"] img {
+  transition: transform 1.8s var(--ease-expo);
+}
+.js [data-reveal="stagger"]:not([data-in]) > * {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+}
+[data-reveal="stagger"] > * {
+  transition: opacity 0.9s var(--ease-expo), transform 1s var(--ease-expo);
+}
+[data-reveal="stagger"] > *:nth-child(2) { transition-delay: 70ms; }
+[data-reveal="stagger"] > *:nth-child(3) { transition-delay: 140ms; }
+[data-reveal="stagger"] > *:nth-child(4) { transition-delay: 210ms; }
+[data-reveal="stagger"] > *:nth-child(5) { transition-delay: 280ms; }
+[data-reveal="stagger"] > *:nth-child(6) { transition-delay: 350ms; }
+[data-reveal="stagger"] > *:nth-child(n + 7) { transition-delay: 420ms; }
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] .rl > span,
+  .js [data-reveal],
+  .js [data-reveal] > *,
+  .js [data-reveal] img {
+    transform: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+}
+
+/* ---------- Preloader (máx 1 s) ---------- */
+html[data-seen] #preloader {
+  display: none;
+}
+#preloader {
+  animation: pre-out 0.45s var(--ease-quart) 0.6s forwards;
+}
+.pre-logo {
+  animation: pre-in 0.5s var(--ease-expo) both;
+}
+.pre-bar {
+  animation: pre-bar 0.6s var(--ease-quart) both;
+}
+@keyframes pre-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@keyframes pre-bar {
+  from { transform: scaleX(0); }
+}
+@keyframes pre-out {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+
+/* ---------- Hero ---------- */
+/* El titular del hero anima al cargar (no depende de IntersectionObserver) */
+/* Opacidad + desplazamiento (no máscara): Chrome cuenta el titular como LCP apenas aparece */
+.hero-title .rl {
+  overflow: visible;
+}
+.js .hero-title .rl > span {
+  animation: rl-soft 1.1s var(--ease-expo) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+.js .hero-fade {
+  animation: fade-up 1.1s var(--ease-expo) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes rl-in {
+  from { transform: translate3d(0, 108%, 0); }
+}
+@keyframes rl-soft {
+  from { opacity: 0.01; transform: translate3d(0, 28%, 0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translate3d(0, 24px, 0); }
+}
+@keyframes scrollhint {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* Entrada escalonada de resultados (CSS, sin JS: no bloquea el hilo principal) */
+.js .stagger-in > * {
+  animation: fade-up 0.7s var(--ease-expo) both;
+  animation-delay: calc(var(--k, 0) * 60ms);
+}
